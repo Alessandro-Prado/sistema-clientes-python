@@ -8,6 +8,18 @@ Este projeto foi criado para praticar conceitos de backend como:
 - Organização de código
 - Uso de Git e GitHub
 
+## Interface do sistema
+
+### Tela inicial
+
+![Tela inicial](images/Captura%20de%20tela%202026-03-05%20080344.png)
+
+### Cadastro de clientes
+
+![Cadastro](images/Captura%20de%20tela%202026-03-05%20081331.png)
+
+
+
 ## Tecnologias utilizadas
 
 - Python
