@@ -16,7 +16,7 @@ Este projeto foi criado para praticar conceitos de backend como:
 
 ### Cadastro de clientes
 
-![Cadastro](images/Captura%20de%20tela%202026-03-05%20081331.png)
+![Cadastro](images/Captura%20de%20tela%202026-03-05%20085415.png)
 
 
 

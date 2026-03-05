@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, render_template
-from database import criar_tabela, conectar
+from flask import Flask, jsonify, request, render_template
+from database import conectar, criar_tabela
 
 app = Flask(__name__)
 
@@ -18,10 +18,10 @@ def listar_clientes():
 
     cursor.execute("SELECT * FROM clientes")
     clientes = cursor.fetchall()
+
     conn.close()
 
     lista = []
-
     for cliente in clientes:
         lista.append({
             "id": cliente[0],
@@ -35,29 +35,57 @@ def listar_clientes():
 
 @app.route("/clientes", methods=["POST"])
 def cadastrar_cliente():
-    dados = request.get_json()
 
-    nome = dados["nome"]
-    telefone = dados["telefone"]
-    email = dados["email"]
+    dados = request.json
 
     conn = conectar()
     cursor = conn.cursor()
 
-    try:
-        cursor.execute(
-            "INSERT INTO clientes (nome, telefone, email) VALUES (?, ?, ?)",
-            (nome, telefone, email)
-        )
-        conn.commit()
-        return jsonify({"mensagem": "Cliente cadastrado!"}), 201
+    cursor.execute(
+        "INSERT INTO clientes (nome, telefone, email) VALUES (?, ?, ?)",
+        (dados["nome"], dados["telefone"], dados["email"])
+    )
 
-    except:
-        return jsonify({"erro": "Email já cadastrado!"}), 400
+    conn.commit()
+    conn.close()
 
-    finally:
-        conn.close()
+    return jsonify({"mensagem": "Cliente cadastrado"})
 
+
+@app.route("/clientes/<int:id>", methods=["DELETE"])
+def deletar_cliente(id):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("DELETE FROM clientes WHERE id = ?", (id,))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"mensagem": "Cliente deletado com sucesso"})
+
+@app.route("/clientes/<int:id>", methods=["PUT"])
+def editar_cliente(id):
+
+    dados = request.json
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE clientes
+        SET nome = ?, telefone = ?, email = ?
+        WHERE id = ?
+        """,
+        (dados["nome"], dados["telefone"], dados["email"], id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"mensagem": "Cliente atualizado com sucesso"})
 
 if __name__ == "__main__":
     app.run(debug=True)
